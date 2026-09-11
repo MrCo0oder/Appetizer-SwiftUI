@@ -11,12 +11,15 @@ final class Order: ObservableObject {
     func addItem(newItem: AppetizerModel) {
         items.append(newItem)
     }
-    func removeItem(item: AppetizerModel) {
-        items.removeAll { appetizer in
-            appetizer.id == item.id
-        }
+    func removeItem(at atOffset: IndexSet) {
+        items.remove(atOffsets: atOffset)
     }
     func removeAll() {
         items.removeAll()
+    }
+    var totalPrice: Double {
+        items.reduce(0) {
+            $0 + $1.price
+        }
     }
 }

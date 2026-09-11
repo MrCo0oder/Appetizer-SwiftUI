@@ -8,11 +8,30 @@
 import SwiftUI
 
 struct EmtyStateView: View {
+    let img: String
+    let msg: String
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            Color(.secondarySystemBackground)
+                .ignoresSafeArea()
+            VStack {
+                Image(img)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 150)
+                    .padding()
+                Text(msg)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.secondary)
+                    .padding()
+            }
+            .padding(.bottom, 100)
+        }
     }
 }
 
 #Preview {
-    EmtyStateView()
+    EmtyStateView(img: "empty-order", msg: "Hello")
 }

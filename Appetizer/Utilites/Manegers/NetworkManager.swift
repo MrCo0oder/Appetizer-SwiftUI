@@ -14,48 +14,68 @@ final class NetworkManager {
     static let BASE_URL = "https://6979bdb3cc9c576a8e17871b.mockapi.io/v1/"
     static let listEndpoint = BASE_URL + "AppetizerList"
     private init() {}
-
-    func getAppetizers(
-        completed: @escaping (Result<[AppetizerModel], APError>) -> Void
-    ) {
+    //
+    //    func getAppetizers(
+    //        completed: @escaping (Result<[AppetizerModel], APError>) -> Void
+    //    ) {
+    //        guard let url = URL(string: NetworkManager.listEndpoint) else {
+    //            completed(.failure(.invalidUrl))
+    //            return
+    //        }
+    //        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) {
+    //            data,
+    //            response,
+    //            error
+    //            in
+    //            guard error == nil else {
+    //                completed(.failure(.unableToComplete))
+    //                return
+    //            }
+    //            guard let response = response as? HTTPURLResponse,
+    //                response.statusCode == 200
+    //            else {
+    //                completed(.failure(.invalidResponse))
+    //                return
+    //            }
+    //            guard let data = data else {
+    //                completed(.failure(.invalidData))
+    //                return
+    //            }
+    //            do {
+    //                let decoder = JSONDecoder()
+    //
+    //                let decodedResponse = try decoder.decode(
+    //                    [AppetizerModel].self,
+    //                    from: data
+    //                )
+    //                completed(.success(decodedResponse))
+    //            } catch {
+    //                print("Decoding error: \(error)")
+    //
+    //                completed(.failure(.invalidResponse))
+    //            }
+    //        }
+    //        task.resume()
+    //    }
+    func getAppetizers() async throws -> [AppetizerModel] {
         guard let url = URL(string: NetworkManager.listEndpoint) else {
-            completed(.failure(.invalidUrl))
-            return
+            throw APError.invalidUrl
         }
-        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) {
-            data,
-            response,
-            error
-            in
-            guard error == nil else {
-                completed(.failure(.unableToComplete))
-                return
-            }
-            guard let response = response as? HTTPURLResponse,
-                response.statusCode == 200
-            else {
-                completed(.failure(.invalidResponse))
-                return
-            }
-            guard let data = data else {
-                completed(.failure(.invalidData))
-                return
-            }
-            do {
-                let decoder = JSONDecoder()
 
-                let decodedResponse = try decoder.decode(
-                    [AppetizerModel].self,
-                    from: data
-                )
-                completed(.success(decodedResponse))
-            } catch {
-                print("Decoding error: \(error)")
+        let (data, _) = try await URLSession.shared.data(from: url)
 
-                completed(.failure(.invalidResponse))
-            }
+        do {
+            let decoder = JSONDecoder()
+
+            return try decoder.decode(
+                [AppetizerModel].self,
+                from: data
+            )
+
+        } catch {
+            print("Decoding error: \(error)")
+            throw APError.invalidResponse
         }
-        task.resume()
     }
     func downloadImage(
         fromUrlString: String,

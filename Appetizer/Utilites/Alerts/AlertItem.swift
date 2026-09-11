@@ -34,5 +34,27 @@ struct AlertContext {
         messsage: Text("Unable to complete your request at this time."),
         dismissButton: .default(Text("OK"))
     )
-
+    
+    //Mark: - Account Alerts
+    
+    static let invalidFormData = AlertItem(
+        title: Text("Error"),
+        messsage: Text("Please enter valid data."),
+        dismissButton: .default(Text("OK"))
+    )
+    static let invalidEmail = AlertItem(
+        title: Text("Error"),
+        messsage: Text("Please add valid email."),
+        dismissButton: .default(Text("OK"))
+    )
+    static let dataSaved = AlertItem(
+        title: Text("Profile Saved"),
+        messsage: Text("Your profile info was successfully Saved!"),
+        dismissButton: .default(Text("OK"))
+    )
+    static let invalidUserData = AlertItem(
+        title: Text("Profile Error"),
+        messsage: Text("There was an error saving or retriving your profile!"),
+        dismissButton: .default(Text("OK"))
+    )
 }

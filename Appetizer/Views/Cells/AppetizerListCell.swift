@@ -25,8 +25,6 @@ struct AppetizerListCell: View {
                     .foregroundStyle(.secondary)
 
             }.padding(.leading)
-        }.onTapGesture {
-
         }
     }
 }

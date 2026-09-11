@@ -13,23 +13,26 @@ struct UIState {
     var appetizers: [AppetizerModel] = []
     var isLoading: Bool = false
     var alertItem: AlertItem?
+    var isDetailsShown = false
+    var selectedAppetizer: AppetizerModel? = nil
+
 }
+@MainActor
 final class AppetizerListViewModel: ObservableObject {
     @Published var uiState: UIState = UIState()
 
     func getAppetizers() {
         uiState.isLoading = true
         self.uiState.alertItem = nil
-        NetworkManager.shared.getAppetizers { result in
-            DispatchQueue.main.async {
-                self.uiState.isLoading = false
-                switch result {
-                case .success(let appetizers):
-                    self.uiState.appetizers = appetizers
 
-                case .failure(let error):
+        Task {
+            do {
+                self.uiState.appetizers = try await NetworkManager.shared
+                    .getAppetizers()
+            } catch {
+                if let apError = error as? APError {
                     self.uiState.alertItem =
-                        switch error {
+                        switch apError {
                         case .invalidUrl:
                             AlertContext.invalidURL
                         case .invalidResponse:
@@ -39,9 +42,13 @@ final class AppetizerListViewModel: ObservableObject {
                         case .unableToComplete:
                             AlertContext.unableToComplete
                         }
+                } else {
+                    self.uiState.alertItem = AlertContext.invalidResponse
                 }
             }
+            uiState.isLoading = false
         }
+
     }
 
 }

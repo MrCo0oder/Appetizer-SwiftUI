@@ -24,7 +24,8 @@ struct AccountView: View {
                     DatePicker(
                         "Birthdate",
                         selection: $viewmodel.uiState.user.birthDate,
-                        displayedComponents: [.date]
+                        in: Date().oneHundredYearsAgo...Date().eighteenYearsAgo,
+                        displayedComponents: .date
                     )
                     Button {
                         viewmodel.saveChanges(hasFeedback: true)
@@ -44,6 +45,7 @@ struct AccountView: View {
                     )
 
                 }.toggleStyle(SwitchToggleStyle(tint: .brandColor))
+                    .foregroundStyle(.brand)
 
             }.alert(item: $viewmodel.uiState.alertItem) { item in
                 Alert(
